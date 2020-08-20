@@ -16,7 +16,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+// const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const modules = require('./modules');
@@ -140,27 +140,11 @@ module.exports = function(webpackEnv) {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     entry: {
-            index: [
-                paths.appIndexJs,
-                isEnvDevelopment &&
-                    require.resolve('react-dev-utils/webpackHotDevClient'),
-            ].filter(Boolean),
-            query: [
-                paths.appQueryJs,
-                isEnvDevelopment &&
-                    require.resolve('react-dev-utils/webpackHotDevClient'),
-            ].filter(Boolean),
-            ticket: [
-                paths.appTicketJs,
-                isEnvDevelopment &&
-                    require.resolve('react-dev-utils/webpackHotDevClient'),
-            ].filter(Boolean),
-            order: [
-                paths.appOrderJs,
-                isEnvDevelopment &&
-                    require.resolve('react-dev-utils/webpackHotDevClient'),
-            ].filter(Boolean),
-        },
+      index: [paths.appIndexJs, isEnvDevelopment && require.resolve('react-dev-utils/webpackHotDevClient')].filter(Boolean),
+      query: [paths.appQueryJs, isEnvDevelopment && require.resolve('react-dev-utils/webpackHotDevClient')].filter(Boolean),
+      ticket: [paths.appTicketJs, isEnvDevelopment && require.resolve('react-dev-utils/webpackHotDevClient')].filter(Boolean),
+      order: [paths.appOrderJs, isEnvDevelopment && require.resolve('react-dev-utils/webpackHotDevClient')].filter(Boolean),
+    },
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
@@ -311,7 +295,7 @@ module.exports = function(webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        // new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       ],
     },
     resolveLoader: {
@@ -674,9 +658,17 @@ module.exports = function(webpackEnv) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
-          const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
-          );
+          const entrypointFiles = [
+
+            ...entrypoints.index,
+          
+            ...entrypoints.order,
+          
+            ...entrypoints.query,
+          
+            ...entrypoints.ticket
+          
+          ];
 
           return {
             files: manifestFiles,
