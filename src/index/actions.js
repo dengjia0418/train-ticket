@@ -49,7 +49,7 @@ export function toggleHighSpeed () {
 export function showCitySelector (currentSelectingLeftCity) {
     return (dispatch) => {
         dispatch({
-            type: ACTION_SET_IS_DATE_SELECTOR_VISIBLE,
+            type: ACTION_SET_IS_CITY_SELECTOR_VISIBLE,
             payload: true,
         });
         
