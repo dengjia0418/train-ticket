@@ -96,3 +96,22 @@ export function exchangeFromTo () {
         dispatch(setTo(from));
     }
 }
+
+export  function fetchCityData () {
+    return (dispatch, getState)=> {
+        const { isLoadingCityData } =getState();
+        if(isLoadingCityData) {
+            return;
+        }
+        dispatch(setIsLoadingCityData(true));
+        fetch('/rest/cities?_' + Date.now())
+            .then(res => res.json())
+            .then(cityDate => {
+                dispatch(setCityData(cityDate));
+                dispatch(setIsLoadingCityData(false));
+            })
+            .catch(() => {
+                dispatch(setIsLoadingCityData(false));
+            })
+    };
+}

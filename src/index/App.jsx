@@ -11,7 +11,7 @@ import Submit from './Submit.jsx';
 
 import CitySelector from '../common/CitySelector.jsx';
 
-import { exchangeFromTo, showCitySelector ,hidaCitySelector} from './actions.js'
+import { exchangeFromTo, showCitySelector ,hidaCitySelector, fetchCityData} from './actions.js'
 
 function App (props) {
     
@@ -37,7 +37,8 @@ function App (props) {
     
     const CitySelectorCbs = useMemo( ()=> {
         return bindActionCreators({
-            onBack: hidaCitySelector
+            onBack: hidaCitySelector,
+            fetchCityData,
         },dispatch)
     },[dispatch])
     return (
