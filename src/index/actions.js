@@ -71,7 +71,9 @@ export function setSelectedCity (city) {
     return (dispatch, getState) => {
         const { currentSelectingLeftCity } = getState();
 
-        currentSelectingLeftCity ? dispatch(setFrom(city)) : dispatch(setTo(city))
+        currentSelectingLeftCity ? dispatch(setFrom(city)) : dispatch(setTo(city));
+
+        dispatch(hidaCitySelector());
     }
 }
 

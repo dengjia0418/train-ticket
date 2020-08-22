@@ -11,7 +11,7 @@ import Submit from './Submit.jsx';
 
 import CitySelector from '../common/CitySelector.jsx';
 
-import { exchangeFromTo, showCitySelector ,hidaCitySelector, fetchCityData} from './actions.js'
+import { exchangeFromTo, showCitySelector ,hidaCitySelector, fetchCityData, setSelectedCity} from './actions.js'
 
 function App (props) {
     
@@ -20,10 +20,10 @@ function App (props) {
         to, 
         dispatch,
         isCitySelectorVisible,
-        CityData,
+        cityData,
         isLodaingCityData,
     } = props
-
+    
     const onBack = useCallback(()=>{
         window.history.back();
     }, [])
@@ -39,6 +39,7 @@ function App (props) {
         return bindActionCreators({
             onBack: hidaCitySelector,
             fetchCityData,
+            onSelect: setSelectedCity,
         },dispatch)
     },[dispatch])
     return (
@@ -54,7 +55,7 @@ function App (props) {
             </form>
             <CitySelector 
                 show={isCitySelectorVisible}
-                cityData={CityData}
+                cityData={cityData}
                 isLoading={isLodaingCityData}
                 {...CitySelectorCbs}
             />
