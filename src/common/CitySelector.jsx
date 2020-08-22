@@ -58,4 +58,5 @@ CitySelector.propType = {
     cityData: PropType.object,
     isLoadingm: PropType.bool.isRequired,
     onBack: PropType.func.isRequired,
+    fetchCityData: PropType.func.isRequired,
 }
