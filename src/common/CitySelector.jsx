@@ -116,6 +116,79 @@ CityList.propType = {
     toAlpha: PropType.func.isRequired,
 }
 
+const SuggestItem = memo( function SuggestItem (props) {
+    const {
+        name,
+        onClick,
+    } = props
+
+    return (
+        <li className="city-suggest-li" onClick={ ()=> onClick(name)}>
+            {name}
+        </li>
+    )
+});
+
+SuggestItem.propType = {
+    name: PropType.string.isRequired,
+    onClick: PropType.func.isRequired,
+}
+
+const Suggest = memo(function Suggest (props) {
+    const {
+        searchKey,
+        onSelect,
+    } = props;
+
+    const [result, setResult] = useState([]);
+    useEffect( ()=> {
+        fetch('/rest/search?key=' + encodeURIComponent(searchKey))
+            .then(res => res.json())
+            .then(data => {
+                const { result, searchKey: sKey,} = data;
+               
+                
+                if(sKey === searchKey ){
+                    setResult(result)
+                }
+            });
+    },[searchKey]);
+
+    const fallBackResult =useMemo(()=> {
+        if(!result.lengt){
+            return [{
+                display:searchKey,
+            }]
+        }
+        return result
+    },[result, searchKey])
+    console.log(fallBackResult);
+    
+    return (
+        <div className="city-suggest">
+            <ul className="city-suggest-ul">
+            {
+                fallBackResult.map( item => {
+                    return (
+                        <SuggestItem 
+                            key={item.display}
+                            name={item.display}
+                            onClick={onSelect}
+                        />
+                    )
+                })
+            }
+            </ul>
+        </div>
+    )
+});
+
+Suggest.propType = {
+    searchKey: PropType.string.isRequired,
+    onSelect: PropType.func.isRequired,
+}
+
+
 const CitySelector = memo(function CitySelector (props) {
     const {
         show,
@@ -181,6 +254,14 @@ const CitySelector = memo(function CitySelector (props) {
                     &#xf063;
                 </i>
             </div>
+            {
+                Boolean(key) && (
+                    <Suggest
+                        searchKey={key}
+                        onSelect={key => onSelect(key)}
+                    />
+                )
+            }
             { outputCitySections() }
         </div>
     );

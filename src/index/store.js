@@ -13,6 +13,7 @@ export default createStore(
         isLoadingCityData: false,
         isDateSelectorVisible: false,
         highSpeed: false,
+        departDate: Date.now(),
     },
     applyMiddleware(thunk)
 );
