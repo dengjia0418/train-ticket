@@ -96,7 +96,14 @@ export function exchangeFromTo () {
         const { from , to } = getState();
         dispatch(setFrom(to));
         dispatch(setTo(from));
-    }
+    };
+}
+
+export function setDepartDate(deparDate) {
+    return {
+        type: ACTION_SET_DEPART_DATE,
+        payload: deparDate,
+    };
 }
 
 export  function fetchCityData () {

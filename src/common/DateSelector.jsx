@@ -1,13 +1,62 @@
 import React from 'react'
 import ProrType from 'prop-types'
 import './DateSelector.css'
+import { h0 } from './fp'
 import classNames from 'classnames'
 import Header from './Header.jsx'
+
+function Day(props) {
+    const {
+        day,
+        onSelect
+    } = props;
+
+    if(!day){
+        return <td className="null"></td>
+    }
+    console.log(day);
+    
+    const calsses = [];
+    const now = h0();
+    if(day < now){
+        calsses.push('disabled');
+    }
+    if([6,0].includes(new Date(day).getDay())){
+        calsses.push('weekend');
+    }
+    const dateString = now === day ? '今天' : new Date(day).getDate();
+    return(
+        <td className={classNames(calsses)} onClick={()=> onSelect(day)}>
+            { dateString } 
+        </td>
+    );
+}
+
+function Week(props) {
+    const {
+        days,
+        onSelect,
+
+    } = props
+    return (
+        <tr className="date-table-days">
+            {
+                days.map((day, index) => {
+                    return <Day
+                        key={index}
+                        day={day}
+                        onSelect={onSelect}
+                    /> 
+                })
+            }
+        </tr>
+    );
+}
 
 function Month(props) {
     const {
         startingTimeInMonth,
-        // onSelect,
+        onSelect,
     } = props
     const startDay = new Date(startingTimeInMonth);
     const currentDay = new Date(startingTimeInMonth);
@@ -16,16 +65,18 @@ function Month(props) {
         days.push(currentDay.getTime());
         currentDay.setDate(currentDay.getDate() + 1)
     }
-    days =  new Array(startDay.getDay() ? startDay.getDay() -1 : 6)
+    days =  new Array(startDay.getDay() ? startDay.getDay() - 1 : 6)
         .fill(null).concat(days);
 
     const lastDay = new Date(days[days.length - 1]);
     days =  days.concat(new Array(lastDay.getDay() ? 7 - lastDay.getDay() : 0).fill(null));
     const weeks = [];
-    for(let row = 0; row < days.length /7 ; row ++ ){
-        const week = days.slice(row * 7, (row * 1) * 7);
+    for(let row = 0; row < days.length / 7 ; ++row ){
+        const week = days.slice(row * 7, (row + 1) * 7);
         weeks.push(week);
     }
+    console.log(weeks);
+    
     return (
         <table className="date-table">
             <thead>
@@ -38,7 +89,7 @@ function Month(props) {
                 </tr>
             </thead>
             <tbody>
-                <tr className="data-table-weeks">
+                <tr className="date-table-weeks">
                     <th>周一</th>
                     <th>周二</th>
                     <th>周三</th>
@@ -47,6 +98,16 @@ function Month(props) {
                     <th className="weekend">周六</th>
                     <th className="weekend">周日</th>
                 </tr>
+                {
+                    weeks.map((week, idx) => {
+                        return (
+                        <Week
+                            key={idx}
+                            days={week}
+                            onSelect={onSelect}
+                        />)
+                    })
+                }
             </tbody>
         </table>
     );
@@ -72,6 +133,8 @@ export default function  DateSelector(props) {
 
     now.setMonth(now.getMonth() + 1);
     monthSequence.push(now.getTime());
+    console.log(monthSequence);
+    
     return (
         <div className={classNames('date-selector',{hidden: !show})}>
             <Header title="日期选择" onBack={onBack}/>

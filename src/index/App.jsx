@@ -12,13 +12,17 @@ import Submit from './Submit.jsx';
 import CitySelector from '../common/CitySelector.jsx';
 import DateSelector from '../common/DateSelector.jsx';
 
+import { h0 } from '../common/fp.js';
+
 import { exchangeFromTo, 
         showCitySelector,
         hidaCitySelector, 
         fetchCityData, 
         setSelectedCity, 
         showDateSelector, 
-        hideDateSelector
+        hideDateSelector,
+        setDepartDate,
+        toggleHighSpeed,
         } 
         from './actions.js'
 
@@ -33,7 +37,7 @@ function App (props) {
         isLodaingCityData,
         departDate,
         isDateSelectorVisible,
-        
+        highSpeed,
     } = props
     
     const onBack = useCallback(()=>{
@@ -66,18 +70,38 @@ function App (props) {
             onBack: hideDateSelector,
         },dispatch)
     },[dispatch])
+
+    const onSelectDate = useCallback((day) => {
+        if(!day){
+            return;
+        }
+        if(day < h0()){
+            return;
+        }
+        dispatch(setDepartDate(day));
+        dispatch(hideDateSelector());
+    },[dispatch]);
+
+    const HighSpeedCbs = useMemo(()=> {
+        return bindActionCreators({
+            toggle: toggleHighSpeed,
+        },dispatch)
+    },[dispatch])
     return (
         <div>
             <div className="header-wrapper">
                 <Header title="火车票" onBack={onBack} />
             </div>
-            <form className="form">
+            <form className="form" action="./query.html">
                 <Journey from={from} to={to} {...cbs}/>
                 <DepartDate 
                     time={departDate}
                     {...departDateCbs}
                 />
-                <HighSpeed />
+                <HighSpeed
+                    {...HighSpeedCbs}
+                    highSpeed={highSpeed}
+                />
                 <Submit />
             </form>
             <CitySelector 
@@ -89,6 +113,7 @@ function App (props) {
             <DateSelector
                 show={isDateSelectorVisible}
                 {...dateSelectorCbs}
+                onSelect={onSelectDate}
             />
         </div>
     );
