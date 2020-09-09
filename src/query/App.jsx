@@ -29,7 +29,7 @@ import { h0 } from '../common/fp.js'
 
 function App(props) {
     const {
-        // trainList,
+        trainList,
         from,
         to,
         departDate,
@@ -180,7 +180,7 @@ function App(props) {
                 prev={prev}
                 next={next}
             /> 
-            <List />
+            <List list = {trainList}/>
             <Bottom />
         </div>
     )
